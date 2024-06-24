@@ -1,3 +1,10 @@
-country = input('(한식/중식/일식/양식) 공백기준 중복선택 가능 : ').split(' ')
-if type(country) == list and len(country) > 1:
-    print(1)
+def input_filter(name, b):
+    a = input(f'{name} : ')
+    for i in range(len(b)):
+        if a == b[i]:
+            a = i
+    return a
+
+space = input_filter('(상관없음/배달/홀)', ['상관없음','배달','홀'])
+
+print(space)

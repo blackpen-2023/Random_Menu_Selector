@@ -5,16 +5,16 @@ def read_data():
     f = open("Logic_TEST/MenuList.csv", "r")
     reader = csv.reader(f)
     result = []
-    for row in reader:
-        result.append(row)
+    rows = list(reader)
+    for i in range(2, len(rows)):
+        result.append(rows[i])
     return result
         
 def show_menu(menu):
-    print('( 메뉴	인원	가격	배달/홀	맵기	짜기	달기	한/중/일/양	밥/면	국물/볶음/찜/구이/다이어트	칼로리	참고처	곁들임 )')
-    for i in range(1, len(menu)):
-        for j in range(0,len(menu[i])):
-            print(menu[i][j], end='    \t')
-        print()        
+    for i in range(len(menu)):
+        for j in range(len(menu[i])):
+            print(menu[i][j], end='\t|')
+        print()
 
 def input_filter(name, rule, isSplit=None,):
     if isSplit != None:
@@ -32,7 +32,7 @@ def input_filter(name, rule, isSplit=None,):
         for i in range(len(rule)):
             if data == rule[i]:
                 data = i
-    return data
+    return data 
 
 def set_value():
     people = int(input('몇명이서? (숫자만) : '))
@@ -46,12 +46,23 @@ def set_value():
     food_type = input_filter('(상관없음/국물/볶음/찜/구이/다이어트) 공백기준 중복선택 가능', ['상관없음', '국물','볶음','찜','구이', '다이어트'], ' ')
     kcal = int(input('칼로리 제한(숫자만) : '))
     print(f'{people}, {price}, {space}, {spicy}, {salty}, {sweety}, {country}, {rice}, {food_type}, {kcal}')
+    result = [None,people,price,space,spicy,salty,sweety,country,rice,food_type,kcal,None]
+    return result
 
-def MenuFilter(menu):
-    pass
-
-
+def filtering(rule, menu):
+    result = []
+    print('Filtering Started!')
+    result = people_(rule[1],menu)    
+    
+def people_(rule, menu):
+    result = []
+    for i in range(len(menu)):
+        if menu[i][1] == 0 or int(menu[i][1]) > rule:
+            print(f'{menu[i][0]} 메뉴가 통과되었습니다.')
+            result.append(menu[i])
+    return result
 MenuList = read_data()
 show_menu(MenuList)
-set_value()
-MenuFilter(MenuList)
+#filter = set_value()
+filter = [None,1,5000,0,0,1,0,2,2,0,1000,None]
+filtering(filter, MenuList)

@@ -49,20 +49,190 @@ def set_value():
     result = [None,people,price,space,spicy,salty,sweety,country,rice,food_type,kcal,None]
     return result
 
+def default_setting():
+    spicy = 1500 #맵기
+    salty = 2000 #짜기 (하루권장 나트륨 섭취량)
+    kcal = 700 #한끼 섭취량
+    return [spicy, salty, kcal]
+    
 def filtering(rule, menu):
     result = []
     print('Filtering Started!')
-    result = people_(rule[1],menu)    
+    print('---| 인원수 필터링 |---')
+    result = people_filter(rule[1],menu)
+    print('---| 가격 필터링 |---')
+    result = price_filter(rule[2], result)
+    print('---| 장소 필터링 |---')
+    result = space_filter(rule[3],result)
+    print('---| 맵기 필터링 |---')
+    result = spicy_filter(rule[4],result)
+    print('---| 건강식 필터링 |---')
+    result = salty_filter(rule[5],result)
+    print('---| 디저트 필터링 |---')
+    result = sweety_filter(rule[6],result)
+    #print('---| 식사(국가)종류 필터링 |---')
+    #result = country_filter(rule[7],result)
+    #print('---| 밥/면 필터링 |---')
+    #result = riceORnoodle_filter(rule[8],result)
+    #print('---| 음식옵션 필터링 |---')
+    #result = foodOption_filter(rule[9],result)
+    #print('---| 칼로리 필터링 |---')
+    #result = kcal_filter(rule[10],result)
     
-def people_(rule, menu):
+    if result == []:
+        print('\n** 조건에 맞는 메뉴가 없습니다.')
+    else:
+        return result
+
+    
+def people_filter(rule, menu):
     result = []
     for i in range(len(menu)):
-        if menu[i][1] == 0 or int(menu[i][1]) > rule:
+        if menu[i][1] == 0 or int(menu[i][1]) <= rule:
             print(f'{menu[i][0]} 메뉴가 통과되었습니다.')
             result.append(menu[i])
     return result
+
+def price_filter(rule, menu):
+    result = []
+    for i in range(len(menu)):
+        if int(menu[i][2]) <= rule:
+            print(f'{menu[i][0]} 메뉴가 통과되었습니다.')
+            result.append(menu[i])
+    if result == []:
+        print('조건에 맞는 메뉴가 없습니다.')
+    return result
+
+def space_filter(rule, menu):
+    result = []
+    for i in range(len(menu)):
+        if menu[i][3] == 0 or int(menu[i][3]) == rule:
+            print(f'{menu[i][0]} 메뉴가 통과되었습니다.')
+            result.append(menu[i])
+    if result == []:
+        print('조건에 맞는 메뉴가 없습니다.')
+    return result
+
+def spicy_filter(rule, menu):
+    result = []
+
+    # 맛설정 상관없음
+    if rule == 0:
+        for i in range(len(menu)):
+            result.append(menu[i])
+        print('( ** 모든 메뉴가 통과되었습니다. )')
+        return result
+        
+    for i in range(len(menu)):
+        # 순한맛 설정 (스코빌 1200)
+        if rule == 1:
+            print('순한맛으로 설정됨.\n')
+            taste_rule = (int(menu[i][4]) <= 1200)
+        # 보통맛 설정 (스코빌 2000)
+        elif rule == 2:
+            print('보통맛으로 설정됨.\n')
+            taste_rule = (int(menu[i][4]) <= 2000)
+        # 매운맛 설정 (-)
+        elif rule == 3:
+            print('매운맛으로 설정됨.\n')
+            taste_rule = (int(menu[i][4]) > 2000)
+        
+        if taste_rule:
+            print(f'{menu[i][0]} 메뉴가 통과되었습니다.')
+            result.append(menu[i])
+    if result == []:
+        print('조건에 맞는 메뉴가 없습니다.')
+    return result
+
+def salty_filter(rule, menu):
+    # 건강식인지 확인.
+    result = []
+    if rule == 0:   # 상관없음 설정
+        print('건강식 상관없음 설정됨.\n')
+        for i in range(len(menu)):
+                result.append(menu[i])
+        print('( ** 모든 메뉴가 통과되었습니다. )')
+        return result
+    for i in range(len(menu)):
+        # 건강식이면
+        if rule == 1:
+            print('건강식으로 설정됨.\n')
+            salty_rule = (int(menu[i][5]) <= 900)
+        # 건강식이 아니면        
+        elif rule == 2:
+            print('건강식 아님으로 설정됨.\n')
+            salty_rule = (int(menu[i][5]) >= 900)
+        if salty_rule:
+            print(f'{menu[i][0]} 메뉴가 통과되었습니다.')
+            result.append(menu[i])
+    if result == []:
+        print('조건에 맞는 메뉴가 없습니다.')
+    return result
+
+def sweety_filter(rule, menu):
+    result = []
+    if rule == 0:
+        print('디저트 아님으로 설정됨.\n')
+        for i in range(len(menu)):
+            if int(menu[i][7]) == 0:
+                print(f'{menu[i][0]} 메뉴가 통과되었습니다.')
+                result.append(menu[i])
+    elif rule == 1:
+        print('디저트로 설정됨.\n')
+        for i in range(len(menu)):
+            if int(menu[i][7]) == 1:
+                print(f'{menu[i][0]} 메뉴가 통과되었습니다.')
+                result.append(menu[i])
+    return result
+
+def country_filter(rule, menu):
+    pass
+
+def riceORnoodle_filter(rule, menu):
+    pass
+
+def foodOption_filter(rule, menu):
+    pass
+
+def kcal_filter(rule, menu):
+    pass
+
+def DiceFunc(menu, loop):
+    dice=[]                      
+    for i in range(loop):
+        a = random.randint(1,menu)       
+        while a in dice :      
+            a = random.randint(1,menu)
+        dice.append(a)
+    return dice
+            
+def randomDice(menu, loop):
+    dice = DiceFunc(len(menu), loop)
+    result = []
+    for i in range(loop):
+        result.append(menu[dice[i]-1])
+    return result
+        
+def print_result(result):
+    print('필터링된 메뉴로는 ', end='')
+    if len(result) == 1:
+        print(f'{result[0][0]} ',end='')
+    else:
+        for i in range(len(result)-1):
+            print(f'{result[i][0]}, ',end='')
+        print(f'{result[len(result)-1][0]} ',end='')
+    print('을(를) 추천합니다.')
+
 MenuList = read_data()
 show_menu(MenuList)
 #filter = set_value()
-filter = [None,1,5000,0,0,1,0,2,2,0,1000,None]
-filtering(filter, MenuList)
+filter = [None,0,5000,0,0,2,0,2,2,0,1000,None]
+# 공란 / 인원수 / 기격 / 장소 / (순한맛 보통맛 매운맛) / 건강식 / 디저트 / 식사종류(한중일양) / (밥, 면) / (국물, 볶음, 찜, 구이, 다이어트) / 칼로리
+FilteredMenus = filtering(filter, MenuList)
+print(FilteredMenus)
+print(f'선택할 수 있는 메뉴는 총 {len(FilteredMenus)}개 입니다.')
+loop = int(input('몇개의 음식을 추천할까요?(숫자만입력) : '))
+if loop > len(FilteredMenus):
+    print('필터링된 결과의 메뉴수보다 많습니다.')
+else:
+    print_result(result = randomDice(FilteredMenus, loop))

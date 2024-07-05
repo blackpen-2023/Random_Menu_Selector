@@ -332,6 +332,18 @@ def print_result(result):
             print(f'{result[i][0]}, ',end='')
         print(f'{result[len(result)-1][0]} ',end='')
     print('을(를) 추천합니다.')
+    
+def hobulho(rule, menu):
+    if rule == "예":
+        result = []
+        for i in range(len(menu)):
+            if int(menu[i][17]) == 0:
+                result.append(menu[i])
+            else:
+                print(f'( 메뉴 {menu[i][0]} 가 제외되었습니다. )') 
+        return result
+    else:
+        return menu
 
 MenuList = read_data()
 show_menu(MenuList)
@@ -340,7 +352,6 @@ filter = [None,4,80000,0,2,0,0,['한식','중식'],0,['국물'],0]
 print(filter)
 # 공란 / 인원수 / 기격 / 장소 / (순한맛 보통맛 매운맛) / 건강식 / 디저트 / 식사종류(한중일양) / (밥, 면) / (국물, 볶음, 찜, 구이, 다이어트) / 칼로리
 FilteredMenus = filtering(filter, MenuList)
-print(FilteredMenus)
 print(f'선택할 수 있는 메뉴는 총 {len(FilteredMenus)}개 입니다.')
 loop = int(input('몇개의 음식을 추천할까요?(숫자만입력) : '))
 if loop > len(FilteredMenus):
@@ -348,3 +359,6 @@ if loop > len(FilteredMenus):
 else:
     print_result(result = randomDice(FilteredMenus, loop))
     
+hobulho_rule = input("호불호 메뉴를 필터링 하시겠습니까? (예/아니오) : ")
+FilteredMenus = hobulho(hobulho_rule, FilteredMenus)
+print_result(result = randomDice(FilteredMenus, loop))

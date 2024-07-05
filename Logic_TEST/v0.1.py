@@ -347,3 +347,4 @@ if loop > len(FilteredMenus):
     print('필터링된 결과의 메뉴수보다 많습니다.')
 else:
     print_result(result = randomDice(FilteredMenus, loop))
+    
